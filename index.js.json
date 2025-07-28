@@ -1,0 +1,30 @@
+const { Client, GatewayIntentBits } = require('discord.js');
+const { joinVoiceChannel } = require('@discordjs/voice');
+require('dotenv').config();
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildVoiceStates
+  ]
+});
+
+client.once('ready', async () => {
+  console.log(`✅ Logged in as ${client.user.tag}`);
+
+  // استبدل القيم هذه بمعرف السيرفر والروم الصوتي الصحيحين
+  const guild = await client.guilds.fetch('1398982227013931038');
+  const channel = await guild.channels.fetch('1398982229375586356');
+
+  joinVoiceChannel({
+    channelId: channel.id,
+    guildId: guild.id,
+    adapterCreator: guild.voiceAdapterCreator,
+    selfMute: false,  // البوت بيبقى صامت
+    selfDeaf: false   // البوت ما بيصمّت نفسه
+  });
+
+  console.log(`🎧 Joined voice channel: ${channel.name}`);
+});
+
+client.login(process.env.TOKEN);
